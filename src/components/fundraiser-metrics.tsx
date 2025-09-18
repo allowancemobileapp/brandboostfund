@@ -1,66 +1,91 @@
-import { Target, TrendingUp, Users, DollarSign } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+"use client";
+
+import { useEffect, useRef, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { cn } from '@/lib/utils';
 import type { Metrics } from '@/lib/types';
+
+function useCountUp(end: number, start = 0, duration = 2000) {
+  const [count, setCount] = useState(start);
+  const frameRate = 1000 / 60;
+  const totalFrames = Math.round(duration / frameRate);
+
+  useEffect(() => {
+    let frame = 0;
+    const counter = setInterval(() => {
+      frame++;
+      const progress = Math.min(frame / totalFrames, 1);
+      // Ease-out quad function
+      const easedProgress = progress * (2 - progress);
+      setCount(Math.floor(end * easedProgress));
+
+      if (frame === totalFrames) {
+        clearInterval(counter);
+      }
+    }, frameRate);
+
+    return () => clearInterval(counter);
+  }, [end, frameRate, totalFrames]);
+
+  return count;
+}
+
+const AnimatedMetric = ({ value, label, subtext, format, className, delay }: { value: number; label: string; subtext: string; format: (val: number) => string; className?: string; delay: number }) => {
+    const [ref, inView] = useInView({
+        triggerOnce: true,
+        threshold: 0.1,
+    });
+    const count = useCountUp(inView ? value : 0);
+
+    return (
+        <div 
+            ref={ref}
+            className={cn(
+                "text-center flex flex-col items-center transition-all duration-700 ease-out",
+                inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                className
+            )}
+            style={{ transitionDelay: `${delay}ms` }}
+        >
+            <div className="text-5xl md:text-6xl font-bold font-headline tabular-nums">{format(count)}</div>
+            <h3 className="text-sm font-medium uppercase text-muted-foreground mt-2">{label}</h3>
+            <p className="text-xs text-muted-foreground">{subtext}</p>
+        </div>
+    );
+};
+
 
 export function FundraiserMetrics({ metrics }: { metrics: Metrics }) {
   const { goal, raised, slots } = metrics;
   const amountLeft = goal > raised ? goal - raised : 0;
-  const percentageRaised = goal > 0 ? (raised / goal) * 100 : 0;
-
-  const formatCurrency = (amount: number) => {
-    // Format as NGN without currency symbol
-    return new Intl.NumberFormat('en-NG', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(amount);
-  };
   
   const formatNGN = (amount: number) => {
-    return `N${formatCurrency(amount)}`;
+    return `N${new Intl.NumberFormat('en-NG').format(amount)}`;
   }
 
+  const formatNumber = (amount: number) => {
+    return new Intl.NumberFormat('en-NG').format(amount);
+  }
+
+  const metricItems = [
+    { value: raised, label: 'Total Raised', subtext: `${(raised/goal * 100).toFixed(0)}% of goal`, format: formatNGN },
+    { value: goal, label: 'Fundraising Goal', subtext: 'Our target for this round', format: formatNGN },
+    { value: amountLeft, label: 'Amount Left', subtext: 'to reach our goal', format: formatNGN },
+    { value: slots, label: 'Available Slots', subtext: 'for new brands to join', format: formatNumber },
+  ]
+
   return (
-    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-      <div className="text-center flex flex-col items-center">
-        <div className="flex flex-row items-center justify-center space-y-0 pb-2">
-            <h3 className="text-sm font-medium uppercase text-muted-foreground">Total Raised</h3>
-        </div>
-        <div>
-          <div className="text-5xl font-bold font-headline">{formatNGN(raised)}</div>
-          <p className="text-xs text-muted-foreground">
-            {percentageRaised.toFixed(1)}% of goal
-          </p>
-          <Progress value={percentageRaised} className="mt-2 h-2" />
-        </div>
-      </div>
-      <div className="text-center flex flex-col items-center">
-        <div className="flex flex-row items-center justify-center space-y-0 pb-2">
-            <h3 className="text-sm font-medium uppercase text-muted-foreground">Fundraising Goal</h3>
-        </div>
-        <div>
-          <div className="text-5xl font-bold font-headline">{formatNGN(goal)}</div>
-          <p className="text-xs text-muted-foreground">Our target for this round</p>
-        </div>
-      </div>
-      <div className="text-center flex flex-col items-center">
-        <div className="flex flex-row items-center justify-center space-y-0 pb-2">
-            <h3 className="text-sm font-medium uppercase text-muted-foreground">Amount Left</h3>
-        </div>
-        <div>
-          <div className="text-5xl font-bold font-headline">{formatNGN(amountLeft)}</div>
-          <p className="text-xs text-muted-foreground">to reach our goal</p>
-        </div>
-      </div>
-      <div className="text-center flex flex-col items-center">
-        <div className="flex flex-row items-center justify-center space-y-0 pb-2">
-            <h3 className="text-sm font-medium uppercase text-muted-foreground">Available Slots</h3>
-        </div>
-        <div>
-          <div className="text-5xl font-bold font-headline">{slots}</div>
-          <p className="text-xs text-muted-foreground">for new brands to join</p>
-        </div>
-      </div>
+    <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-4">
+      {metricItems.map((item, index) => (
+        <AnimatedMetric 
+          key={item.label}
+          value={item.value}
+          label={item.label}
+          subtext={item.subtext}
+          format={item.format}
+          delay={index * 100}
+        />
+      ))}
     </div>
   );
 }
