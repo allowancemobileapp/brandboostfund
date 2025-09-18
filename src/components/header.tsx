@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { BrandRegistrationForm } from './brand-registration-form';
 import { Button } from './ui/button';
 
 export function Header() {
@@ -21,7 +20,9 @@ export function Header() {
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <BrandRegistrationForm />
+          <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Link href="/#register">Register</Link>
+          </Button>
         </div>
       </div>
     </header>

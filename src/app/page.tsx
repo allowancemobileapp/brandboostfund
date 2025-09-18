@@ -20,7 +20,7 @@ export default async function Home() {
     <div className="flex min-h-dvh flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center text-center">
+        <section className="relative w-full h-[80vh] min-h-[700px] flex items-center justify-center text-center">
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10" />
             <Image
                 src={heroImage?.imageUrl || "https://picsum.photos/seed/hero/1600/900"}
@@ -45,7 +45,7 @@ export default async function Home() {
                     <p className="max-w-2xl text-lg text-muted-foreground md:text-xl">
                         We're building 100 professional websites for just N10,000 each to empower businesses and raise N1,000,000. Let's build yours.
                     </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <div id="register" className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 scroll-mt-20">
                         <BrandRegistrationForm />
                         <Button variant="outline" size="lg" asChild className="backdrop-blur-sm bg-background/30">
                             <Link href="/faq">Learn More</Link>
@@ -55,13 +55,13 @@ export default async function Home() {
             </div>
         </section>
         
-        <section id="metrics" className="py-24 sm:py-32">
+        <section id="metrics" className="py-24 sm:py-32 scroll-mt-20">
           <div className="container">
             <FundraiserMetrics metrics={metrics} />
           </div>
         </section>
 
-        <section id="brands" className="py-24 sm:py-32 bg-secondary/20 border-t border-b border-border">
+        <section id="brands" className="py-24 sm:py-32 bg-secondary/20 border-t border-b border-border scroll-mt-20">
           <div className="container">
             <div className="mx-auto max-w-3xl text-center mb-16">
                 <h2 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl">Featured Brands</h2>
