@@ -31,7 +31,7 @@ const faqItems = [
   {
     question: 'How long will it take to get my website?',
     answer:
-      'Your website will be live within 3 days after your brand is approved and we have all the necessary information from you.',
+      'Your website will be live within 7 days after your brand is approved and we have all the necessary information from you.',
   },
   {
     question: "What do you mean by 'No web apps'?",
