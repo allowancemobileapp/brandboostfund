@@ -4,8 +4,10 @@ import { addBrand } from '@/lib/data';
 
 const brandSchema = z.object({
   name: z.string().min(1),
+  brandName: z.string().min(1),
   description: z.string().min(1),
   contact: z.string().email(),
+  socials: z.string().optional(),
 });
 
 export async function POST(request: Request) {

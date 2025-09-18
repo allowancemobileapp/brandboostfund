@@ -4,56 +4,12 @@ import type { Brand, Metrics } from '@/lib/types';
 // Data will reset on server restart.
 
 let metrics: Metrics = {
-  goal: 100000,
-  raised: 25000,
-  slots: 10,
+  goal: 1000000,
+  raised: 0,
+  slots: 100,
 };
 
-let brands: Brand[] = [
-  {
-    id: '1',
-    name: 'QuantumLeap',
-    description: 'Pioneering quantum computing solutions for a new era of technology.',
-    contact: 'contact@quantumleap.com',
-    websiteUrl: 'https://example.com',
-    status: 'approved',
-    featured: true,
-    generatedDescription: "Harness the power of tomorrow with QuantumLeap, where we turn quantum impossibilities into today's realities. Experience computation at the speed of light.",
-    logoUrl: '1',
-  },
-  {
-    id: '2',
-    name: 'EcoBloom',
-    description: 'Sustainable and ethically sourced products for a greener lifestyle.',
-    contact: 'hello@ecobloom.com',
-    websiteUrl: 'https://example.com',
-    status: 'approved',
-    featured: true,
-    generatedDescription: 'Live green, live better. EcoBloom offers a curated collection of beautiful, sustainable products that are kind to you and the planet.',
-    logoUrl: '2',
-  },
-  {
-    id: '3',
-    name: 'Aetheric Goods',
-    description: 'Luxury handcrafted leather goods with a timeless design.',
-    contact: 'support@aetheric.com',
-    websiteUrl: 'https://example.com',
-    status: 'approved',
-    featured: false,
-    generatedDescription: 'Aetheric Goods: where tradition meets elegance. Discover our collection of handcrafted leather goods, designed to last a lifetime and beyond.',
-    logoUrl: '3',
-  },
-  {
-    id: '4',
-    name: 'SynthWave Snacks',
-    description: 'Retro-futuristic snacks that taste like the 80s.',
-    contact: 'orders@synthwave.com',
-    status: 'pending',
-    websiteUrl: null,
-    featured: false,
-    logoUrl: '4',
-  }
-];
+let brands: Brand[] = [];
 
 export const getMetrics = async (): Promise<Metrics> => {
   return Promise.resolve(metrics);
@@ -91,5 +47,12 @@ export const updateBrand = async (brandId: string, updates: Partial<Brand>): Pro
     return Promise.resolve(undefined);
   }
   brands[brandIndex] = { ...brands[brandIndex], ...updates };
+
+  // When a brand is approved, update metrics
+  if (updates.status === 'approved' && brands[brandIndex].status !== 'approved') {
+    metrics.raised += 10000;
+    metrics.slots -= 1;
+  }
+  
   return Promise.resolve(brands[brandIndex]);
 };

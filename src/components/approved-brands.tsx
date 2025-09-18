@@ -16,12 +16,12 @@ import { ArrowUpRight } from 'lucide-react';
 export function ApprovedBrands({ brands }: { brands: Brand[] }) {
   if (brands.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 py-24 text-center">
+      <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 py-24 text-center bg-card">
         <h3 className="text-2xl font-semibold tracking-tight">
-          Portfolio is Growing
+          The First Websites Are Coming Soon!
         </h3>
         <p className="mt-2 text-muted-foreground">
-          Approved brands will be showcased here. Check back soon!
+          As we approve brands, we'll showcase their new websites here.
         </p>
       </div>
     );
@@ -30,13 +30,13 @@ export function ApprovedBrands({ brands }: { brands: Brand[] }) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {brands.map((brand) => (
-        <Card key={brand.id} className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
+        <Card key={brand.id} className="flex flex-col overflow-hidden transition-all hover:shadow-lg hover:border-accent/50 bg-card">
           <CardHeader className="flex-row gap-4 items-start">
             {brand.logoUrl && (
               <div className="relative w-16 h-16 flex-shrink-0">
                 <Image
                   src={`https://picsum.photos/seed/${brand.logoUrl}/100/100`}
-                  alt={`${brand.name} logo`}
+                  alt={`${brand.brandName} logo`}
                   width={64}
                   height={64}
                   className="rounded-lg object-cover border"
@@ -45,7 +45,7 @@ export function ApprovedBrands({ brands }: { brands: Brand[] }) {
               </div>
             )}
             <div>
-              <CardTitle className="font-headline text-xl">{brand.name}</CardTitle>
+              <CardTitle className="font-headline text-xl">{brand.brandName}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="flex-grow">

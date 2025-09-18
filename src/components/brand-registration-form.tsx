@@ -28,9 +28,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  name: z.string().min(2, "Brand name must be at least 2 characters."),
-  description: z.string().min(10, "Description must be at least 10 characters."),
+  name: z.string().min(2, "Your name must be at least 2 characters."),
   contact: z.string().email("Please enter a valid email address."),
+  brandName: z.string().min(2, "Brand name must be at least 2 characters."),
+  description: z.string().min(10, "Description must be at least 10 characters."),
+  socials: z.string().optional(),
 });
 
 export function BrandRegistrationForm() {
@@ -42,8 +44,10 @@ export function BrandRegistrationForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      description: "",
       contact: "",
+      brandName: "",
+      description: "",
+      socials: "",
     },
   });
 
@@ -80,44 +84,27 @@ export function BrandRegistrationForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-brand-pink text-primary-foreground hover:bg-brand-pink/90">
+        <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
           Register Your Brand
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-headline">Register Your Brand</DialogTitle>
+          <DialogTitle className="font-headline text-2xl">Register Your Brand</DialogTitle>
           <DialogDescription>
-            Fill out the form below to be considered for the BrandBoost Fund.
+            Fill out the form for a chance to get a new website for just N10,000.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Brand Name</FormLabel>
+                  <FormLabel>Your Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. QuantumLeap" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Brand Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Tell us about your brand's mission and products."
-                      className="resize-none"
-                      {...field}
-                    />
+                    <Input placeholder="John Doe" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -136,14 +123,58 @@ export function BrandRegistrationForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+             <FormField
+              control={form.control}
+              name="brandName"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Brand Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. QuantumLeap" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Brand Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Tell us about your brand's mission and products."
+                      className="resize-none"
+                      rows={4}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="socials"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Social Media Handle (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="@yourbrand on X or Instagram" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" disabled={isSubmitting} className="w-full col-span-2 bg-accent text-accent-foreground hover:bg-accent/90">
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...
                 </>
               ) : (
-                "Submit for Review"
+                "Submit for Review (N10,000)"
               )}
             </Button>
           </form>

@@ -37,21 +37,30 @@ export default async function AdminPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[200px]">Brand Name</TableHead>
+              <TableHead>Registrant</TableHead>
               <TableHead>Contact</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Original Description</TableHead>
+              <TableHead className="hidden md:table-cell">Description</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {brands.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center">
+                  No brands registered yet.
+                </TableCell>
+              </TableRow>
+            )}
             {brands.map((brand: Brand) => (
               <TableRow key={brand.id}>
-                <TableCell className="font-medium">{brand.name}</TableCell>
+                <TableCell className="font-medium">{brand.brandName}</TableCell>
+                <TableCell>{brand.name}</TableCell>
                 <TableCell>{brand.contact}</TableCell>
                 <TableCell>
                   <Badge 
                     variant={brand.status === 'approved' ? 'default' : brand.status === 'pending' ? 'secondary' : 'destructive'}
-                    className={brand.status === 'approved' ? 'bg-green-100 text-green-800' : ''}
+                    className={brand.status === 'approved' ? 'bg-green-700/20 text-green-400 border-green-700/30' : ''}
                   >
                     {brand.status}
                   </Badge>
