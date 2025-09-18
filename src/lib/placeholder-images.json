@@ -6,6 +6,12 @@
       "description": "Abstract flowing lines background",
       "imageUrl": "https://picsum.photos/seed/apple-esque/1600/1200",
       "imageHint": "abstract gradient"
+    },
+    {
+      "id": "brands-bg",
+      "description": "Subtle geometric pattern background",
+      "imageUrl": "https://picsum.photos/seed/texture/1600/1200",
+      "imageHint": "geometric pattern"
     }
   ]
 }

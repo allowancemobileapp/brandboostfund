@@ -15,6 +15,7 @@ export default async function Home() {
   const allBrands = await getBrands();
   const approvedBrands = allBrands.filter(brand => brand.status === 'approved');
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero');
+  const brandsBgImage = PlaceHolderImages.find(img => img.id === 'brands-bg');
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -56,8 +57,16 @@ export default async function Home() {
           </div>
         </section>
 
-        <section id="brands" className="py-24 sm:py-32 bg-secondary/20 border-t border-b border-border scroll-mt-20">
-          <div className="container">
+        <section id="brands" className="relative py-24 sm:py-32 border-t border-b border-border scroll-mt-20">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-transparent z-10" />
+            <Image
+                src={brandsBgImage?.imageUrl || "https://picsum.photos/seed/brands-bg/1600/1200"}
+                alt={brandsBgImage?.description || "Abstract background"}
+                fill
+                className="object-cover"
+                data-ai-hint={brandsBgImage?.imageHint || "geometric pattern"}
+            />
+          <div className="container relative z-20">
             <div className="mx-auto max-w-3xl text-center mb-16">
                 <h2 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl">Featured Brands</h2>
                 <p className="mt-6 text-lg text-muted-foreground">We're proud to have helped these brands get online. Check out their new websites!</p>
