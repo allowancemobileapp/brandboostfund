@@ -29,7 +29,7 @@ export default async function Home() {
                 fill
                 className="object-cover"
                 priority
-                data-ai-hint={heroImage?.imageHint || "abstract lines"}
+                data-ai-hint={heroImage?.imageHint || "abstract gradient"}
             />
             
             <div className="relative z-20 container px-4 md:px-6">
