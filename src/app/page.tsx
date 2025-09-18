@@ -3,12 +3,12 @@ import { getMetrics, getBrands } from "@/lib/data";
 import { Header } from "@/components/header";
 import { FundraiserMetrics } from "@/components/fundraiser-metrics";
 import { ApprovedBrands } from "@/components/approved-brands";
-import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/footer";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BrandRegistrationForm } from "@/components/brand-registration-form";
+import { AnimatedGoalBadge } from "@/components/animated-goal-badge";
 
 export default async function Home() {
   const metrics = await getMetrics();
@@ -33,16 +33,11 @@ export default async function Home() {
             
             <div className="relative z-20 container px-4 md:px-6">
                 <div className="max-w-4xl mx-auto flex flex-col items-center space-y-6">
-                    <Badge 
-                      variant="secondary" 
-                      className="bg-accent/10 text-accent border-accent/20 backdrop-blur-sm hover:bg-accent/20 transition-all text-sm py-1 px-4"
-                    >
-                      Fundraiser Goal: N1,000,000
-                    </Badge>
+                    <AnimatedGoalBadge goal={metrics.goal} />
                     <h1 className="text-5xl font-headline font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
                         Your Vision, Online.
                     </h1>
-                    <p className="max-w-2xl text-lg text-muted-foreground md:text-xl">
+                    <p className="max-w-2xl text-lg text-muted-foreground md:text-xl font-body">
                         We're building 100 professional websites for just N10,000 each to empower businesses and raise N1,000,000. Let's build yours.
                     </p>
                     <div id="register" className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 scroll-mt-20">

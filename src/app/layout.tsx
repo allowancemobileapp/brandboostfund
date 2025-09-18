@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: '100 Websites Fundraiser',
+  title: 'Brand Boost Fund',
   description: 'Building 100 websites to raise N1,000,000 for businesses.',
 };
 

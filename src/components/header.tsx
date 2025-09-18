@@ -10,7 +10,7 @@ export function Header() {
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="font-bold font-headline sm:inline-block">
-              100 Websites Fundraiser
+              Brand Boost Fund
             </span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
