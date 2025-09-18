@@ -30,8 +30,8 @@ export function ApprovedBrands({ brands }: { brands: Brand[] }) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {brands.map((brand) => (
-        <Card key={brand.id} className="flex flex-col overflow-hidden transition-all hover:shadow-lg hover:border-accent/50 bg-card">
-          <CardHeader className="flex-row gap-4 items-start">
+        <Card key={brand.id} className="flex flex-col overflow-hidden transition-all hover:shadow-lg hover:border-accent/50 bg-card text-center">
+          <CardHeader className="flex-col gap-4 items-center">
             {brand.logoUrl && (
               <div className="relative w-16 h-16 flex-shrink-0">
                 <Image

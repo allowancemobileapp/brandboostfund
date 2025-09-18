@@ -25,10 +25,10 @@ export function FundraiserMetrics({ metrics }: { metrics: Metrics }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <Card className="text-center">
+        <CardHeader className="flex flex-row items-center justify-center space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Raised</CardTitle>
-          <DollarSign className="h-4 w-4 text-muted-foreground" />
+          <DollarSign className="h-4 w-4 text-muted-foreground ml-2" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{formatCurrency(raised)}</div>
@@ -38,30 +38,30 @@ export function FundraiserMetrics({ metrics }: { metrics: Metrics }) {
           <Progress value={percentageRaised} className="mt-2 h-2" />
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <Card className="text-center">
+        <CardHeader className="flex flex-row items-center justify-center space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Fundraising Goal</CardTitle>
-          <Target className="h-4 w-4 text-muted-foreground" />
+          <Target className="h-4 w-4 text-muted-foreground ml-2" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{formatCurrency(goal)}</div>
           <p className="text-xs text-muted-foreground">Our target for this round</p>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <Card className="text-center">
+        <CardHeader className="flex flex-row items-center justify-center space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Amount Left</CardTitle>
-          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <TrendingUp className="h-4 w-4 text-muted-foreground ml-2" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{formatCurrency(amountLeft)}</div>
           <p className="text-xs text-muted-foreground">to reach our goal</p>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <Card className="text-center">
+        <CardHeader className="flex flex-row items-center justify-center space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Available Slots</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
+          <Users className="h-4 w-4 text-muted-foreground ml-2" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">+{slots}</div>
