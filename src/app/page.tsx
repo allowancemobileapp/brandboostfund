@@ -17,33 +17,37 @@ export default async function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero');
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-dvh flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <section className="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center text-center">
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+        <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center text-center">
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10" />
             <Image
                 src={heroImage?.imageUrl || "https://picsum.photos/seed/hero/1600/900"}
                 alt={heroImage?.description || "Abstract background"}
                 fill
-                className="object-cover -z-10"
+                className="object-cover"
                 priority
                 data-ai-hint={heroImage?.imageHint || "abstract lines"}
             />
             
-            <div className="relative z-10 container px-4 md:px-6">
-                <div className="max-w-3xl mx-auto space-y-4">
-                    <Badge variant="secondary" className="bg-accent/20 text-accent border-accent/30 hover:bg-accent/30">Help Us Reach N1,000,000</Badge>
-                    <h1 className="text-4xl font-headline font-bold tracking-tighter text-foreground sm:text-5xl md:text-6xl">
-                        Get a Professional Website & Support a Great Cause
+            <div className="relative z-20 container px-4 md:px-6">
+                <div className="max-w-4xl mx-auto flex flex-col items-center space-y-6">
+                    <Badge 
+                      variant="secondary" 
+                      className="bg-accent/10 text-accent border-accent/20 backdrop-blur-sm hover:bg-accent/20 transition-all text-sm py-1 px-4"
+                    >
+                      Fundraiser Goal: N1,000,000
+                    </Badge>
+                    <h1 className="text-5xl font-headline font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+                        Your Vision, Online.
                     </h1>
-                    <p className="text-lg text-muted-foreground md:text-xl">
-                        We're building 100 simple, elegant websites for businesses to raise N1,000,000. 
-                        Let's build your online presence together.
+                    <p className="max-w-2xl text-lg text-muted-foreground md:text-xl">
+                        We're building 100 professional websites for just N10,000 each to empower businesses and raise N1,000,000. Let's build yours.
                     </p>
-                    <div className="flex justify-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                         <BrandRegistrationForm />
-                        <Button variant="outline" asChild>
+                        <Button variant="outline" size="lg" asChild className="backdrop-blur-sm bg-background/30">
                             <Link href="/faq">Learn More</Link>
                         </Button>
                     </div>
@@ -51,17 +55,17 @@ export default async function Home() {
             </div>
         </section>
         
-        <section id="metrics" className="py-12 md:py-24">
+        <section id="metrics" className="py-24 sm:py-32">
           <div className="container">
             <FundraiserMetrics metrics={metrics} />
           </div>
         </section>
 
-        <section id="brands" className="py-12 md:py-24 bg-secondary/20">
+        <section id="brands" className="py-24 sm:py-32 bg-secondary/20 border-t border-b border-border">
           <div className="container">
-            <div className="mx-auto max-w-2xl text-center mb-12">
-                <h2 className="text-3xl font-headline font-bold tracking-tighter sm:text-4xl">Our Progress So Far</h2>
-                <p className="mt-4 text-muted-foreground">We're proud to have helped these brands get online. Check out their new websites!</p>
+            <div className="mx-auto max-w-3xl text-center mb-16">
+                <h2 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl">Featured Brands</h2>
+                <p className="mt-6 text-lg text-muted-foreground">We're proud to have helped these brands get online. Check out their new websites!</p>
             </div>
             <ApprovedBrands brands={approvedBrands} />
           </div>

@@ -1,10 +1,11 @@
+
 {
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "Abstract background",
-      "imageUrl": "https://picsum.photos/seed/hero-dark/1600/900",
-      "imageHint": "abstract lines"
+      "description": "Abstract flowing lines background",
+      "imageUrl": "https://picsum.photos/seed/apple-esque/1600/1200",
+      "imageHint": "abstract gradient"
     }
   ]
 }

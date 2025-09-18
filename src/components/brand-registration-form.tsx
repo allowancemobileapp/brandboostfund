@@ -84,7 +84,7 @@ export function BrandRegistrationForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
           Register Your Brand
         </Button>
       </DialogTrigger>
