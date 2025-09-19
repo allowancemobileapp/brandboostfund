@@ -40,7 +40,10 @@ export const getMetrics = async (): Promise<Metrics> => {
 
   // If the table is empty, insert the initial data
   if (data && data.length === 0) {
-    const { data: insertedData, error: insertError } = await supabase
+    const supabaseAdmin = getSupabaseServerClient();
+    if (!supabaseAdmin) return initialMetrics;
+
+    const { data: insertedData, error: insertError } = await supabaseAdmin
       .from('metrics')
       .insert(initialMetrics)
       .select()
@@ -65,7 +68,7 @@ export const updateMetrics = async (newMetrics: Partial<Metrics>): Promise<Metri
 
     if (fetchError || !currentMetrics) {
         // If no metrics exist, create initial one
-        if(fetchError.code === 'PGRST116'){ // "exact one row expected"
+        if(fetchError?.code === 'PGRST116'){ // "exact one row expected"
             const { data: insertedData, error: insertError } = await supabaseAdmin
                 .from('metrics')
                 .insert({ ...initialMetrics, ...newMetrics })
@@ -115,13 +118,22 @@ export const getBrandById = async (id: string): Promise<Brand | undefined> => {
     return data || undefined;
 };
 
-
-export const addBrand = async (brandData: Omit<Brand, 'id' | 'status' | 'websiteUrl' | 'featured' | 'generatedDescription' | 'logoUrl' | 'websitePrompt' | 'created_at' | 'updated_at'>): Promise<Brand> => {
+export const addBrand = async (brandData: {
+    name: string;
+    brandName: string;
+    description: string;
+    contact: string;
+    socials?: string;
+}): Promise<Brand> => {
     const { data, error } = await supabase
         .from('brands')
         .insert([
             {
-                ...brandData,
+                name: brandData.name,
+                brandName: brandData.brandName,
+                description: brandData.description,
+                contact: brandData.contact,
+                socials: brandData.socials || null,
                 status: 'pending', // Default status
             },
         ])
