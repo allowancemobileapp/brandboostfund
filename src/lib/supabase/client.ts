@@ -8,7 +8,7 @@ export type Database = {
     Tables: {
       brands: {
         Row: Brand;
-        Insert: Omit<Brand, 'id' | 'status' | 'websiteUrl' | 'featured' | 'generatedDescription' | 'logoUrl' | 'websitePrompt' | 'created_at' | 'updated_at'>;
+        Insert: Omit<Brand, 'id' | 'created_at' | 'updated_at' | 'status' | 'websiteUrl' | 'featured' | 'generatedDescription' | 'logoUrl' | 'websitePrompt'>;
         Update: Partial<Brand>;
       };
       metrics: {
