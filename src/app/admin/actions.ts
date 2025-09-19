@@ -7,7 +7,7 @@ import { generateBrandDescription } from '@/ai/flows/generate-brand-description'
 import { generateWebsitePrompt } from '@/ai/flows/generate-website-prompt';
 import type { Brand } from '@/lib/types';
 
-const ADMIN_CODE = '0000';
+const ADMIN_CODE = '4190';
 
 export async function approveBrandAction(brandId: string, code: string) {
   if (code !== ADMIN_CODE) {
