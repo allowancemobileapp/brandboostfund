@@ -124,7 +124,7 @@ export function BrandActions({ brand }: { brand: Brand }) {
             <AlertDialogTrigger asChild>
               <Button variant="outline" size="sm" disabled={isPending}>
                 {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileText className="mr-2 h-4 w-4" />}
-                {brand.websitePrompt ? 'Regenerate Prompt' : 'Generate Website Prompt'}
+                {brand.website_prompt ? 'Regenerate Prompt' : 'Generate Website Prompt'}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

@@ -16,7 +16,7 @@ export async function approveBrandAction(brandId: string, code: string) {
   try {
     await updateBrand(brandId, { 
       status: 'approved',
-      websiteUrl: 'https://example.com' // Default URL, can be edited via DB access
+      website_url: 'https://example.com' // Default URL, can be edited via DB access
     });
     revalidatePath('/');
     revalidatePath('/admin');
@@ -52,7 +52,7 @@ export async function generateDescriptionAction(brand: Brand) {
       brandDescription: brand.description,
     });
     
-    await updateBrand(brand.id, { generatedDescription: result.generatedDescription });
+    await updateBrand(brand.id, { generated_description: result.generatedDescription });
 
     revalidatePath('/admin');
     revalidatePath('/');
@@ -72,7 +72,7 @@ export async function generateWebsitePromptAction(brand: Brand) {
       brand,
     });
 
-    await updateBrand(brand.id, { websitePrompt: result.websitePrompt });
+    await updateBrand(brand.id, { website_prompt: result.websitePrompt });
 
     revalidatePath('/admin');
     

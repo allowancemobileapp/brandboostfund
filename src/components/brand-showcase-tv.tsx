@@ -68,10 +68,10 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
               ) : (
                 <Card key={currentBrand.id} className="flex flex-col w-full h-full bg-card/80 backdrop-blur-sm text-center border-0 rounded-none">
                   <CardHeader className="flex-col gap-4 items-center pt-8">
-                    {currentBrand.logoUrl && (
+                    {currentBrand.logo_url && (
                       <div className="relative w-16 h-16 flex-shrink-0">
                         <Image
-                          src={`https://picsum.photos/seed/${currentBrand.logoUrl}/100/100`}
+                          src={`https://picsum.photos/seed/${currentBrand.logo_url}/100/100`}
                           alt={`${currentBrand.brandName} logo`}
                           width={64}
                           height={64}
@@ -85,12 +85,12 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
                     </div>
                   </CardHeader>
                   <CardContent className="flex-grow flex items-center">
-                    <CardDescription className="px-4">{currentBrand.generatedDescription || currentBrand.description}</CardDescription>
+                    <CardDescription className="px-4">{currentBrand.generated_description || currentBrand.description}</CardDescription>
                   </CardContent>
                   <CardFooter className="pb-8">
-                    {currentBrand.websiteUrl && (
+                    {currentBrand.website_url && (
                       <Button asChild variant="outline" className="w-full mx-auto max-w-xs bg-background/50">
-                        <Link href={currentBrand.websiteUrl} target="_blank" rel="noopener noreferrer">
+                        <Link href={currentBrand.website_url} target="_blank" rel="noopener noreferrer">
                           Visit Website <ArrowUpRight className="ml-2 h-4 w-4" />
                         </Link>
                       </Button>

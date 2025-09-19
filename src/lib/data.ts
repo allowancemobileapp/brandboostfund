@@ -1,7 +1,7 @@
-import { supabase } from '@/lib/supabase/client';
-import type { Brand, Metrics } from '@/lib/types';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './supabase/client';
+import { supabase } from '@/lib/supabase/client';
+import type { Brand, Metrics } from '@/lib/types';
 
 // Use a server-side client for admin tasks
 const getSupabaseServerClient = () => {

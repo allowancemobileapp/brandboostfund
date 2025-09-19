@@ -8,7 +8,7 @@ export type Database = {
     Tables: {
       brands: {
         Row: Brand;
-        Insert: Omit<Brand, 'id' | 'created_at' | 'updated_at' | 'status' | 'websiteUrl' | 'featured' | 'generatedDescription' | 'logoUrl' | 'websitePrompt'>;
+        Insert: Omit<Brand, 'id' | 'created_at' | 'updated_at' | 'status' | 'website_url' | 'featured' | 'generated_description' | 'logo_url' | 'website_prompt'>;
         Update: Partial<Brand>;
       };
       metrics: {
@@ -25,6 +25,11 @@ export type Database = {
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  // In a real app, you'd want more robust error handling or logging.
+  console.error('Supabase client-side environment variables not set.');
+}
 
 // Create a single Supabase client for use in client-side components
 export const supabase = createClient<Database>(supabaseUrl!, supabaseAnonKey!);
