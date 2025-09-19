@@ -37,11 +37,11 @@ export default async function AdminPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[200px]">Brand Name</TableHead>
+              <TableHead>Description</TableHead>
               <TableHead>Registrant</TableHead>
               <TableHead>Contact</TableHead>
               <TableHead>Socials</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Description</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -56,6 +56,7 @@ export default async function AdminPage() {
             {brands.map((brand: Brand) => (
               <TableRow key={brand.id}>
                 <TableCell className="font-medium">{brand.brandName}</TableCell>
+                <TableCell className="max-w-xs truncate">{brand.description}</TableCell>
                 <TableCell>{brand.name}</TableCell>
                 <TableCell>{brand.contact}</TableCell>
                 <TableCell>{brand.socials || 'N/A'}</TableCell>
@@ -67,7 +68,6 @@ export default async function AdminPage() {
                     {brand.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="max-w-xs truncate hidden md:table-cell">{brand.description}</TableCell>
                 <TableCell className="text-right">
                   <BrandActions brand={brand} />
                 </TableCell>
