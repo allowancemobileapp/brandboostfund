@@ -5,18 +5,19 @@ import type { Database } from './supabase/client';
 
 // Use a server-side client for admin tasks
 const getSupabaseServerClient = () => {
-    // Ensure the required environment variables are available
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) {
         // In a real app, you'd want more robust error handling or logging.
         console.error('Supabase server-side environment variables not set.');
-        // Return a null or mock client to prevent app crashing during build/dev if keys are missing
-        return null; 
+        return null;
     }
     
     // Create a new client with the service role key for elevated privileges
     return createClient<Database>(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.SUPABASE_SERVICE_ROLE_KEY
+        supabaseUrl,
+        serviceRoleKey
     );
 };
 
@@ -63,6 +64,16 @@ export const updateMetrics = async (newMetrics: Partial<Metrics>): Promise<Metri
     const { data: currentMetrics, error: fetchError } = await supabaseAdmin.from('metrics').select('id').limit(1).single();
 
     if (fetchError || !currentMetrics) {
+        // If no metrics exist, create initial one
+        if(fetchError.code === 'PGRST116'){ // "exact one row expected"
+            const { data: insertedData, error: insertError } = await supabaseAdmin
+                .from('metrics')
+                .insert({ ...initialMetrics, ...newMetrics })
+                .select()
+                .single();
+            if(insertError) throw new Error('Could not create initial metrics.');
+            return insertedData;
+        }
         throw new Error('Could not fetch metrics to update.');
     }
 
