@@ -9,13 +9,29 @@ let metrics: Metrics = {
   slots: 100,
 };
 
-let brands: Brand[] = [];
+let brands: Brand[] = [
+  {
+    id: '1',
+    name: 'Jane Doe',
+    brandName: 'Starlight Creations',
+    description:
+      'Handcrafted jewelry inspired by the night sky. Each piece is unique and made with love.',
+    contact: 'jane.doe@example.com',
+    socials: '@starlight',
+    status: 'pending',
+    websiteUrl: null,
+    featured: false,
+    logoUrl: '1',
+  },
+];
 
 export const getMetrics = async (): Promise<Metrics> => {
   return Promise.resolve(metrics);
 };
 
-export const updateMetrics = async (newMetrics: Partial<Metrics>): Promise<Metrics> => {
+export const updateMetrics = async (
+  newMetrics: Partial<Metrics>
+): Promise<Metrics> => {
   metrics = { ...metrics, ...newMetrics };
   return Promise.resolve(metrics);
 };
@@ -25,10 +41,20 @@ export const getBrands = async (): Promise<Brand[]> => {
 };
 
 export const getBrandById = async (id: string): Promise<Brand | undefined> => {
-    return Promise.resolve(brands.find(b => b.id === id));
-}
+  return Promise.resolve(brands.find((b) => b.id === id));
+};
 
-export const addBrand = async (brandData: Omit<Brand, 'id' | 'status' | 'websiteUrl' | 'featured' | 'generatedDescription' | 'logoUrl'>): Promise<Brand> => {
+export const addBrand = async (
+  brandData: Omit<
+    Brand,
+    | 'id'
+    | 'status'
+    | 'websiteUrl'
+    | 'featured'
+    | 'generatedDescription'
+    | 'logoUrl'
+  >
+): Promise<Brand> => {
   const newBrand: Brand = {
     ...brandData,
     id: String(brands.length + 1),
@@ -41,18 +67,22 @@ export const addBrand = async (brandData: Omit<Brand, 'id' | 'status' | 'website
   return Promise.resolve(newBrand);
 };
 
-export const updateBrand = async (brandId: string, updates: Partial<Brand>): Promise<Brand | undefined> => {
-  const brandIndex = brands.findIndex(b => b.id === brandId);
+export const updateBrand = async (
+  brandId: string,
+  updates: Partial<Brand>
+): Promise<Brand | undefined> => {
+  const brandIndex = brands.findIndex((b) => b.id === brandId);
   if (brandIndex === -1) {
     return Promise.resolve(undefined);
   }
+  const wasPending = brands[brandIndex].status === 'pending';
   brands[brandIndex] = { ...brands[brandIndex], ...updates };
 
   // When a brand is approved, update metrics
-  if (updates.status === 'approved' && brands[brandIndex].status !== 'approved') {
+  if (updates.status === 'approved' && wasPending) {
     metrics.raised += 10000;
     metrics.slots -= 1;
   }
-  
+
   return Promise.resolve(brands[brandIndex]);
 };

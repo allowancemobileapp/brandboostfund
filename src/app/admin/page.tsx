@@ -39,6 +39,7 @@ export default async function AdminPage() {
               <TableHead className="w-[200px]">Brand Name</TableHead>
               <TableHead>Registrant</TableHead>
               <TableHead>Contact</TableHead>
+              <TableHead>Socials</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="hidden md:table-cell">Description</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -47,7 +48,7 @@ export default async function AdminPage() {
           <TableBody>
             {brands.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={7} className="h-24 text-center">
                   No brands registered yet.
                 </TableCell>
               </TableRow>
@@ -57,6 +58,7 @@ export default async function AdminPage() {
                 <TableCell className="font-medium">{brand.brandName}</TableCell>
                 <TableCell>{brand.name}</TableCell>
                 <TableCell>{brand.contact}</TableCell>
+                <TableCell>{brand.socials || 'N/A'}</TableCell>
                 <TableCell>
                   <Badge 
                     variant={brand.status === 'approved' ? 'default' : brand.status === 'pending' ? 'secondary' : 'destructive'}
