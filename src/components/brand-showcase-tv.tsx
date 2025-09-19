@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ArrowUpRight, Tv } from 'lucide-react';
+import { ArrowUpRight, Hourglass } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StaticNoise } from '@/components/static-noise';
 
@@ -35,6 +35,12 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
+      {/* Antenna */}
+      <div className="relative h-8 w-full">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-4 bg-white/10" />
+        <div className="absolute bottom-3 left-1/2 -translate-x-full w-20 h-1 bg-white/10 -rotate-45 origin-bottom-right rounded-full" />
+        <div className="absolute bottom-3 left-1/2 w-20 h-1 bg-white/10 rotate-45 origin-bottom-left rounded-full" />
+      </div>
       <div 
         className="bg-[#1a1a1a] p-4 sm:p-6 rounded-2xl shadow-2xl border border-white/10"
         style={{
@@ -51,12 +57,12 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
             <div className={cn("transition-opacity duration-150 w-full h-full", isChanging ? 'opacity-0' : 'opacity-100')}>
               {brands.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center p-4 text-muted-foreground/70 animate-pulse">
-                  <Tv className="w-16 h-16 mb-4" />
+                  <Hourglass className="w-16 h-16 mb-4" />
                   <h3 className="text-2xl font-semibold tracking-tight font-headline text-muted-foreground">
-                    The First Websites Are Coming Soon!
+                    Coming Soon!
                   </h3>
                   <p className="mt-2">
-                    As we approve brands, we'll showcase their new websites here.
+                    Approved brands will be showcased here.
                   </p>
                 </div>
               ) : (
