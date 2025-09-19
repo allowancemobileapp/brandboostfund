@@ -145,9 +145,9 @@ export function BrandRegistrationForm() {
                   <FormLabel>Brand Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Tell us about your brand's mission and products."
+                      placeholder="Be specific! Describe your products or services, target audience, industry, and desired brand colors (e.g., 'A coffee shop for young professionals, with a minimalist vibe. We want earthy tones like brown and green.')"
                       className="resize-none"
-                      rows={4}
+                      rows={5}
                       {...field}
                     />
                   </FormControl>

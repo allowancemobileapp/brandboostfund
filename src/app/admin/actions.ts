@@ -6,7 +6,6 @@ import { updateBrand } from '@/lib/data';
 import { generateBrandDescription } from '@/ai/flows/generate-brand-description';
 import { generateWebsitePrompt } from '@/ai/flows/generate-website-prompt';
 import type { Brand } from '@/lib/types';
-import { faqContent } from '@/lib/faq';
 
 const ADMIN_CODE = '0000';
 
@@ -71,7 +70,6 @@ export async function generateWebsitePromptAction(brand: Brand) {
     }
     const result = await generateWebsitePrompt({
       brand,
-      faqContent,
     });
 
     await updateBrand(brand.id, { websitePrompt: result.websitePrompt });

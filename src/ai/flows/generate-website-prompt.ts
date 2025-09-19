@@ -12,11 +12,9 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import type { Brand } from '@/lib/types';
-import type { FaqItem } from '@/lib/faq';
 
 const GenerateWebsitePromptInputSchema = z.object({
   brand: z.custom<Brand>(),
-  faqContent: z.custom<FaqItem[]>(),
 });
 export type GenerateWebsitePromptInput = z.infer<typeof GenerateWebsitePromptInputSchema>;
 
@@ -44,29 +42,22 @@ The website should be built using Next.js, React, Tailwind CSS, and shadcn/ui co
 - Social Media: {{{brand.socials}}}
 {{/if}}
 
-**Website Specifications (based on our service agreement):**
+**Website Specifications:**
 The website MUST be a single-page layout. It should include the following sections in this order:
-1. A modern, visually appealing hero section that introduces the brand.
-2. An "About" section that elaborates on the brand's story and mission, using the description provided.
-3. A simple "Services" or "Products" section if applicable from their description. If not, omit this.
-4. A "Contact" section with a simple form (Name, Email, Message) that sends an email (or a placeholder for this functionality).
-5. An FAQ section based on the details below.
-
-**FAQ Section Content:**
-Your generated prompt must instruct the AI to include an FAQ section containing the following questions and answers:
-{{#each faqContent}}
-- Question: "{{this.question}}"
-- Answer: "{{this.answer}}"
-{{/each}}
+1.  A modern, visually appealing hero section that introduces the brand.
+2.  An "About" section that elaborates on the brand's story and mission, using the description provided.
+3.  A "Services" or "Products" section. You must infer the services/products from the brand description. If no specific services or products are mentioned, create a simple section that highlights the brand's key value propositions.
+4.  A "Contact" section with a simple form (Name, Email, Message) that has a placeholder for sending an email.
+5.  An "FAQ" section. You must generate 3-5 relevant frequently asked questions and their answers based on the provided brand description. The questions should be things a potential customer might ask about their products, services, or the brand itself.
 
 **Design & Styling Guidelines:**
-- The overall aesthetic should be modern, clean, and professional.
-- Use a color palette that is appropriate for the brand. You can suggest one based on the brand's name and description.
-- All components should be from the shadcn/ui library where possible.
-- The website must be fully responsive and mobile-friendly.
+-   The overall aesthetic should be modern, clean, and professional, and it MUST be tailored to the brand's industry and target audience as described.
+-   Infer a color palette from the brand description. If no colors are mentioned, suggest a professional and appropriate palette based on the industry (e.g., for a coffee shop, suggest warm, earthy tones; for a tech startup, suggest blues and grays). Use these colors in your instructions for styling the site.
+-   All components should be from the shadcn/ui library where possible.
+-   The website must be fully responsive and mobile-friendly.
 
 **Final Output:**
-Based on all the information above, generate a single, comprehensive prompt that can be given to an AI code assistant to build the entire website. The prompt should be detailed, clear, and structured to ensure the AI can follow it accurately. Start the prompt with "Build a single-page website for..." and be very specific in your instructions.
+Based on all the information above, generate a single, comprehensive prompt that can be given to an AI code assistant to build the entire website. The prompt should be detailed, clear, and structured to ensure the AI can follow it accurately. Start the prompt with "Build a single-page website for..." and be very specific in your instructions. Do not include any of our internal notes or brand information in the final prompt you generate.
 `,
 });
 
