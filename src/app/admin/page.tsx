@@ -80,7 +80,7 @@ export default async function AdminPage() {
             )}
             {brands.map((brand: Brand) => (
               <TableRow key={brand.id}>
-                <TableCell className="font-medium">{brand.brandName}</TableCell>
+                <TableCell className="font-medium">{brand.brand_name}</TableCell>
                 <TableCell className="max-w-xs truncate">{brand.description}</TableCell>
                 <TableCell>{brand.name}</TableCell>
                 <TableCell>{brand.contact}</TableCell>

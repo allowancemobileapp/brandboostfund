@@ -8,12 +8,11 @@ export type Brand = {
   description: string;
   contact: string;
   socials?: string | null;
-  website_url: string | null;
   status: 'pending' | 'approved' | 'rejected';
-  featured: boolean;
+  website_url: string | null;
   generated_description?: string | null;
-  logo_url?: string;
   website_prompt?: string | null;
+  logo_url?: string;
 };
 
 export type Metrics = {

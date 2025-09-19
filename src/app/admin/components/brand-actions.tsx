@@ -59,7 +59,7 @@ export function BrandActions({ brand }: { brand: Brand }) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${brand.brandName.toLowerCase().replace(/\s+/g, '-')}-website-prompt.txt`;
+        a.download = `${brand.brand_name.toLowerCase().replace(/\s+/g, '-')}-website-prompt.txt`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -97,7 +97,7 @@ export function BrandActions({ brand }: { brand: Brand }) {
                 Admin Confirmation Required
               </AlertDialogTitle>
               <AlertDialogDescription>
-                To {actionType} the brand "{brand.brandName}", please enter the 4-digit admin code.
+                To {actionType} the brand "{brand.brand_name}", please enter the 4-digit admin code.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <Input 
@@ -131,7 +131,7 @@ export function BrandActions({ brand }: { brand: Brand }) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Generate Website Build Prompt?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will generate a detailed prompt for an AI code builder to create a website for "{brand.brandName}".
+                  This will generate a detailed prompt for an AI code builder to create a website for "{brand.brand_name}".
                   The prompt will be saved and downloaded as a text file.
                 </AlertDialogDescription>
               </AlertDialogHeader>

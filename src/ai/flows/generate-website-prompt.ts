@@ -36,7 +36,7 @@ const prompt = ai.definePrompt({
 The website should be built using Next.js, React, Tailwind CSS, and shadcn/ui components.
 
 **Client Brand Information:**
-- Brand Name: {{{brand.brandName}}}
+- Brand Name: {{{brand.brand_name}}}
 - Brand Description: {{{brand.description}}}
 {{#if brand.socials}}
 - Social Media: {{{brand.socials}}}
@@ -48,7 +48,7 @@ The website MUST be a single-page layout. It should include the following sectio
 2.  An "About" section that elaborates on the brand's story and mission, using the description provided.
 3.  A "Services" or "Products" section. You must infer the services/products from the brand description. If no specific services or products are mentioned, create a simple section that highlights the brand's key value propositions.
 4.  A "Contact" section with a simple form (Name, Email, Message) that has a placeholder for sending an email.
-5.  An "FAQ" section. You must generate 3-5 relevant frequently asked questions and their answers based on the provided brand description. The questions should be things a potential customer might ask about their products, services, or the brand itself.
+5.  A brand-specific "FAQ" section. You MUST generate 3-5 relevant frequently asked questions and their answers based on the provided brand description. The questions should be things a potential customer might ask about their products, services, or the brand itself. Do NOT use generic FAQs.
 
 **Design & Styling Guidelines:**
 -   The overall aesthetic should be modern, clean, and professional, and it MUST be tailored to the brand's industry and target audience as described.

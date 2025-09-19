@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -72,7 +73,7 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
                       <div className="relative w-16 h-16 flex-shrink-0">
                         <Image
                           src={`https://picsum.photos/seed/${currentBrand.logo_url}/100/100`}
-                          alt={`${currentBrand.brandName} logo`}
+                          alt={`${currentBrand.brand_name} logo`}
                           width={64}
                           height={64}
                           className="rounded-lg object-cover border"
@@ -81,7 +82,7 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
                       </div>
                     )}
                     <div>
-                      <CardTitle className="font-headline text-2xl">{currentBrand.brandName}</CardTitle>
+                      <CardTitle className="font-headline text-2xl">{currentBrand.brand_name}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent className="flex-grow flex items-center">

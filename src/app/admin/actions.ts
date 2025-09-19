@@ -48,7 +48,7 @@ export async function generateDescriptionAction(brand: Brand) {
       throw new Error('Brand is not approved.');
     }
     const result = await generateBrandDescription({
-      brandName: brand.brandName,
+      brandName: brand.brand_name,
       brandDescription: brand.description,
     });
     

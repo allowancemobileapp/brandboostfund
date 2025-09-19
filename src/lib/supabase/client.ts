@@ -8,7 +8,7 @@ export type Database = {
     Tables: {
       brands: {
         Row: Brand;
-        Insert: Omit<Brand, 'id' | 'created_at' | 'updated_at' | 'status' | 'website_url' | 'featured' | 'generated_description' | 'logo_url' | 'website_prompt'>;
+        Insert: Omit<Brand, 'id' | 'created_at' | 'updated_at' | 'status' | 'website_url' | 'generated_description' | 'website_prompt' | 'logo_url'>;
         Update: Partial<Omit<Brand, 'id' | 'created_at'>>;
       };
       metrics: {
@@ -32,4 +32,4 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Create a single Supabase client for use in client-side components
-export const supabase = createClient<Database>(supabaseUrl!, supabaseAnonKey!);
+export const supabase = createClient<Database>(supabaseUrl || '', supabaseAnonKey || '');

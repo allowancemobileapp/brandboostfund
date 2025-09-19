@@ -9,8 +9,9 @@ const getSupabaseServerClient = () => {
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !serviceRoleKey) {
-        // In a real app, you'd want more robust error handling or logging.
         console.error('Supabase server-side environment variables not set.');
+        // In a real app, handle this more gracefully.
+        // For now, returning null and letting the calling function handle it.
         return null;
     }
     
@@ -23,67 +24,32 @@ const getSupabaseServerClient = () => {
 
 
 // This is the initial data for the metrics table.
-// It will only be inserted if the table is empty.
 const initialMetrics: Metrics = {
+  id: 1,
   goal: 1000000,
   raised: 0,
   slots: 100,
 };
 
 export const getMetrics = async (): Promise<Metrics> => {
-  const { data, error, count } = await supabase.from('metrics').select().limit(1);
+  const { data, error } = await supabase.from('metrics').select('*').limit(1).single();
 
-  if (error) {
+  if (error || !data) {
     console.error('Error fetching metrics:', error);
-    return initialMetrics; // Return default metrics on error
+    return initialMetrics; // Return default metrics on error or if no data
   }
 
-  // If the table is empty, insert the initial data
-  if (data && data.length === 0) {
-    const supabaseAdmin = getSupabaseServerClient();
-    if (!supabaseAdmin) return initialMetrics;
-
-    const { data: insertedData, error: insertError } = await supabaseAdmin
-      .from('metrics')
-      .insert(initialMetrics)
-      .select()
-      .single();
-    
-    if (insertError) {
-      console.error('Error inserting initial metrics:', insertError);
-      return initialMetrics;
-    }
-    return insertedData || initialMetrics;
-  }
-
-  return data[0] || initialMetrics;
+  return data;
 };
 
 export const updateMetrics = async (newMetrics: Partial<Metrics>): Promise<Metrics> => {
     const supabaseAdmin = getSupabaseServerClient();
     if (!supabaseAdmin) throw new Error('Supabase admin client not initialized.');
 
-    // Since we only have one row, we'll update it. We need its ID first.
-    const { data: currentMetrics, error: fetchError } = await supabaseAdmin.from('metrics').select('id').limit(1).single();
-
-    if (fetchError || !currentMetrics) {
-        // If no metrics exist, create initial one
-        if(fetchError?.code === 'PGRST116'){ // "exact one row expected"
-            const { data: insertedData, error: insertError } = await supabaseAdmin
-                .from('metrics')
-                .insert({ ...initialMetrics, ...newMetrics })
-                .select()
-                .single();
-            if(insertError) throw new Error('Could not create initial metrics.');
-            return insertedData;
-        }
-        throw new Error('Could not fetch metrics to update.');
-    }
-
     const { data, error } = await supabaseAdmin
         .from('metrics')
         .update(newMetrics)
-        .eq('id', currentMetrics.id)
+        .eq('id', 1) // We know there is only one row with id=1
         .select()
         .single();
 
@@ -105,38 +71,42 @@ export const getBrands = async (): Promise<Brand[]> => {
   return data || [];
 };
 
-export const getBrandById = async (id: string): Promise<Brand | undefined> => {
+export const getBrandById = async (id: string): Promise<Brand | null> => {
     const supabaseAdmin = getSupabaseServerClient();
-    if (!supabaseAdmin) return undefined;
+    if (!supabaseAdmin) return null;
 
     const { data, error } = await supabaseAdmin.from('brands').select('*').eq('id', id).single();
 
     if (error) {
         console.error(`Error fetching brand ${id}:`, error);
-        return undefined;
+        return null;
     }
-    return data || undefined;
+    return data;
 };
 
 export const addBrand = async (brandData: {
     name: string;
-    brandName: string;
+    brand_name: string;
     description: string;
     contact: string;
     socials?: string;
 }): Promise<Brand> => {
-    const { data, error } = await supabase
+    // The server-side client is needed for write operations if RLS were enabled for inserts.
+    // Even without RLS, it's good practice to handle writes from a trusted server environment.
+    const supabaseAdmin = getSupabaseServerClient();
+    if (!supabaseAdmin) {
+        throw new Error('Supabase admin client not initialized for adding brand.');
+    }
+
+    const { data, error } = await supabaseAdmin
         .from('brands')
-        .insert([
-            {
-                name: brandData.name,
-                brandName: brandData.brandName,
-                description: brandData.description,
-                contact: brandData.contact,
-                socials: brandData.socials || null,
-                status: 'pending', // Default status
-            },
-        ])
+        .insert({
+            name: brandData.name,
+            brand_name: brandData.brand_name,
+            description: brandData.description,
+            contact: brandData.contact,
+            socials: brandData.socials || null,
+        })
         .select()
         .single();
 
@@ -148,7 +118,7 @@ export const addBrand = async (brandData: {
 };
 
 
-export const updateBrand = async (brandId: string, updates: Partial<Brand>): Promise<Brand | undefined> => {
+export const updateBrand = async (brandId: string, updates: Partial<Brand>): Promise<Brand> => {
     const supabaseAdmin = getSupabaseServerClient();
     if (!supabaseAdmin) throw new Error('Supabase admin client not initialized.');
 

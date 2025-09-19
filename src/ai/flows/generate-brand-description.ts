@@ -37,7 +37,7 @@ const prompt = ai.definePrompt({
   Brand Name: {{{brandName}}}
   Existing Description: {{{brandDescription}}}
 
-  Generated Description:`, // The output should be a creative and engaging brand description.
+  Generated Description:`,
 });
 
 const generateBrandDescriptionFlow = ai.defineFlow(
