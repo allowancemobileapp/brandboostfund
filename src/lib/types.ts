@@ -1,3 +1,4 @@
+
 export type Brand = {
   id: string;
   name: string;
@@ -10,6 +11,7 @@ export type Brand = {
   featured: boolean;
   generatedDescription?: string | null;
   logoUrl?: string;
+  websitePrompt?: string | null;
 };
 
 export type Metrics = {

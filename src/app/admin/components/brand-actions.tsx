@@ -1,11 +1,12 @@
+
 'use client';
 
 import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { approveBrandAction, generateDescriptionAction, rejectBrandAction } from '../actions';
+import { approveBrandAction, generateWebsitePromptAction, rejectBrandAction } from '../actions';
 import type { Brand } from '@/lib/types';
-import { Loader2, Sparkles, ShieldAlert } from 'lucide-react';
+import { Loader2, Sparkles, ShieldAlert, FileText } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,11 +48,23 @@ export function BrandActions({ brand }: { brand: Brand }) {
     });
   };
   
-  const handleGenerateDescription = () => {
+  const handleGeneratePrompt = () => {
     startTransition(async () => {
-      const result = await generateDescriptionAction(brand);
-      if (result.success) {
-        toast({ title: 'Description Generated!', description: 'The new AI-powered description has been saved.' });
+      const result = await generateWebsitePromptAction(brand);
+      if (result.success && result.prompt) {
+        toast({ title: 'Prompt Generated!', description: 'Your prompt is being downloaded.' });
+        
+        // Trigger download
+        const blob = new Blob([result.prompt], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${brand.brandName.toLowerCase().replace(/\s+/g, '-')}-website-prompt.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
       } else {
         toast({ variant: 'destructive', title: 'Error', description: result.message });
       }
@@ -109,24 +122,22 @@ export function BrandActions({ brand }: { brand: Brand }) {
         <>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm" disabled={isPending} className="bg-accent/20 hover:bg-accent/40">
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {!isPending && <Sparkles className="mr-2 h-4 w-4" />}
-                {brand.generatedDescription ? 'Regenerate' : 'Generate'}
+              <Button variant="outline" size="sm" disabled={isPending}>
+                {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileText className="mr-2 h-4 w-4" />}
+                {brand.websitePrompt ? 'Regenerate Prompt' : 'Generate Website Prompt'}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Generate AI Description?</AlertDialogTitle>
+                <AlertDialogTitle>Generate Website Build Prompt?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will use AI to create a new marketing description for "{brand.brandName}". 
-                  {brand.generatedDescription && ' It will replace the current AI-generated description.'}
-                  This action will save the new description automatically.
+                  This will generate a detailed prompt for an AI code builder to create a website for "{brand.brandName}".
+                  The prompt will be saved and downloaded as a text file.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleGenerateDescription} disabled={isPending}>
+                <AlertDialogAction onClick={handleGeneratePrompt} disabled={isPending}>
                   {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                   Confirm & Generate
                 </AlertDialogAction>

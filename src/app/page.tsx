@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { getMetrics, getBrands } from "@/lib/data";
 import { Header } from "@/components/header";

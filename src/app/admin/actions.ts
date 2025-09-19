@@ -1,9 +1,12 @@
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
 import { updateBrand } from '@/lib/data';
 import { generateBrandDescription } from '@/ai/flows/generate-brand-description';
+import { generateWebsitePrompt } from '@/ai/flows/generate-website-prompt';
 import type { Brand } from '@/lib/types';
+import { faqContent } from '@/lib/faq';
 
 const ADMIN_CODE = '0000';
 
@@ -31,6 +34,7 @@ export async function rejectBrandAction(brandId: string, code: string) {
   }
   try {
     await updateBrand(brandId, { status: 'rejected' });
+    revalidatePath('/');
     revalidatePath('/admin');
     return { success: true, message: 'Brand rejected.' };
   } catch (error) {
@@ -57,5 +61,26 @@ export async function generateDescriptionAction(brand: Brand) {
   } catch (error) {
     console.error(error);
     return { success: false, message: 'Failed to generate description.' };
+  }
+}
+
+export async function generateWebsitePromptAction(brand: Brand) {
+  try {
+    if (brand.status !== 'approved') {
+      throw new Error('Can only generate prompts for approved brands.');
+    }
+    const result = await generateWebsitePrompt({
+      brand,
+      faqContent,
+    });
+
+    await updateBrand(brand.id, { websitePrompt: result.websitePrompt });
+
+    revalidatePath('/admin');
+    
+    return { success: true, prompt: result.websitePrompt };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to generate website prompt.' };
   }
 }
