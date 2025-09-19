@@ -1,88 +1,161 @@
+import { supabase } from '@/lib/supabase/client';
 import type { Brand, Metrics } from '@/lib/types';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from './supabase/client';
 
-// This is a mock database. In a real application, you'd use a real database.
-// Data will reset on server restart.
+// Use a server-side client for admin tasks
+const getSupabaseServerClient = () => {
+    // Ensure the required environment variables are available
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        // In a real app, you'd want more robust error handling or logging.
+        console.error('Supabase server-side environment variables not set.');
+        // Return a null or mock client to prevent app crashing during build/dev if keys are missing
+        return null; 
+    }
+    
+    // Create a new client with the service role key for elevated privileges
+    return createClient<Database>(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+    );
+};
 
-let metrics: Metrics = {
+
+// This is the initial data for the metrics table.
+// It will only be inserted if the table is empty.
+const initialMetrics: Metrics = {
   goal: 1000000,
   raised: 0,
   slots: 100,
 };
 
-let brands: Brand[] = [
-  {
-    id: '1',
-    name: 'Jane Doe',
-    brandName: 'Starlight Creations',
-    description:
-      'Handcrafted jewelry inspired by the night sky. Each piece is unique and made with love.',
-    contact: 'jane.doe@example.com',
-    socials: '@starlight',
-    status: 'pending',
-    websiteUrl: null,
-    featured: false,
-    logoUrl: '1',
-  },
-];
-
 export const getMetrics = async (): Promise<Metrics> => {
-  return Promise.resolve(metrics);
+  const { data, error, count } = await supabase.from('metrics').select().limit(1);
+
+  if (error) {
+    console.error('Error fetching metrics:', error);
+    return initialMetrics; // Return default metrics on error
+  }
+
+  // If the table is empty, insert the initial data
+  if (data && data.length === 0) {
+    const { data: insertedData, error: insertError } = await supabase
+      .from('metrics')
+      .insert(initialMetrics)
+      .select()
+      .single();
+    
+    if (insertError) {
+      console.error('Error inserting initial metrics:', insertError);
+      return initialMetrics;
+    }
+    return insertedData || initialMetrics;
+  }
+
+  return data[0] || initialMetrics;
 };
 
-export const updateMetrics = async (
-  newMetrics: Partial<Metrics>
-): Promise<Metrics> => {
-  metrics = { ...metrics, ...newMetrics };
-  return Promise.resolve(metrics);
+export const updateMetrics = async (newMetrics: Partial<Metrics>): Promise<Metrics> => {
+    const supabaseAdmin = getSupabaseServerClient();
+    if (!supabaseAdmin) throw new Error('Supabase admin client not initialized.');
+
+    // Since we only have one row, we'll update it. We need its ID first.
+    const { data: currentMetrics, error: fetchError } = await supabaseAdmin.from('metrics').select('id').limit(1).single();
+
+    if (fetchError || !currentMetrics) {
+        throw new Error('Could not fetch metrics to update.');
+    }
+
+    const { data, error } = await supabaseAdmin
+        .from('metrics')
+        .update(newMetrics)
+        .eq('id', currentMetrics.id)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error updating metrics:', error);
+        throw error;
+    }
+    return data;
 };
+
 
 export const getBrands = async (): Promise<Brand[]> => {
-  return Promise.resolve(brands);
+  const { data, error } = await supabase.from('brands').select('*').order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching brands:', error);
+    return [];
+  }
+  return data || [];
 };
 
 export const getBrandById = async (id: string): Promise<Brand | undefined> => {
-  return Promise.resolve(brands.find((b) => b.id === id));
+    const supabaseAdmin = getSupabaseServerClient();
+    if (!supabaseAdmin) return undefined;
+
+    const { data, error } = await supabaseAdmin.from('brands').select('*').eq('id', id).single();
+
+    if (error) {
+        console.error(`Error fetching brand ${id}:`, error);
+        return undefined;
+    }
+    return data || undefined;
 };
 
-export const addBrand = async (
-  brandData: Omit<
-    Brand,
-    | 'id'
-    | 'status'
-    | 'websiteUrl'
-    | 'featured'
-    | 'generatedDescription'
-    | 'logoUrl'
-  >
-): Promise<Brand> => {
-  const newBrand: Brand = {
-    ...brandData,
-    id: String(brands.length + 1),
-    status: 'pending',
-    websiteUrl: null,
-    featured: false,
-    logoUrl: String(brands.length + 1),
-  };
-  brands.push(newBrand);
-  return Promise.resolve(newBrand);
+
+export const addBrand = async (brandData: Omit<Brand, 'id' | 'status' | 'websiteUrl' | 'featured' | 'generatedDescription' | 'logoUrl' | 'websitePrompt' | 'created_at' | 'updated_at'>): Promise<Brand> => {
+    const { data, error } = await supabase
+        .from('brands')
+        .insert([
+            {
+                ...brandData,
+                status: 'pending', // Default status
+            },
+        ])
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error adding brand:', error);
+        throw error;
+    }
+    return data;
 };
 
-export const updateBrand = async (
-  brandId: string,
-  updates: Partial<Brand>
-): Promise<Brand | undefined> => {
-  const brandIndex = brands.findIndex((b) => b.id === brandId);
-  if (brandIndex === -1) {
-    return Promise.resolve(undefined);
-  }
-  const wasPending = brands[brandIndex].status === 'pending';
-  brands[brandIndex] = { ...brands[brandIndex], ...updates };
 
-  // When a brand is approved, update metrics
-  if (updates.status === 'approved' && wasPending) {
-    metrics.raised += 10000;
-    metrics.slots -= 1;
-  }
+export const updateBrand = async (brandId: string, updates: Partial<Brand>): Promise<Brand | undefined> => {
+    const supabaseAdmin = getSupabaseServerClient();
+    if (!supabaseAdmin) throw new Error('Supabase admin client not initialized.');
 
-  return Promise.resolve(brands[brandIndex]);
+    // Get the brand's current state before updating
+    const currentBrand = await getBrandById(brandId);
+    if (!currentBrand) {
+        throw new Error('Brand not found');
+    }
+
+    const { data, error } = await supabaseAdmin
+        .from('brands')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', brandId)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error updating brand:', error);
+        throw error;
+    }
+
+    // If brand is newly approved, update the metrics
+    const wasPending = currentBrand.status === 'pending';
+    if (updates.status === 'approved' && wasPending) {
+        const currentMetrics = await getMetrics();
+        await updateMetrics({
+            raised: currentMetrics.raised + 10000,
+            slots: currentMetrics.slots - 1,
+        });
+    }
+
+    return data;
 };
