@@ -17,6 +17,31 @@ import { ArrowLeft } from 'lucide-react';
 export default async function AdminPage() {
   const brands = await getBrands();
 
+  const getBadgeVariant = (status: Brand['status']) => {
+    switch (status) {
+      case 'approved':
+        return 'default';
+      case 'pending':
+        return 'secondary';
+      case 'rejected':
+        return 'destructive';
+      default:
+        return 'outline';
+    }
+  }
+
+  const getBadgeClassName = (status: Brand['status']) => {
+    switch (status) {
+        case 'approved':
+            return 'bg-green-700/20 text-green-400 border-green-700/30';
+        case 'rejected':
+            return 'bg-red-700/20 text-red-400 border-red-700/30';
+        default:
+            return '';
+    }
+  }
+
+
   return (
     <div className="container mx-auto py-10">
       <div className="mb-8 flex justify-between items-center">
@@ -61,9 +86,9 @@ export default async function AdminPage() {
                 <TableCell>{brand.contact}</TableCell>
                 <TableCell>{brand.socials || 'N/A'}</TableCell>
                 <TableCell>
-                  <Badge 
-                    variant={brand.status === 'approved' ? 'default' : brand.status === 'pending' ? 'secondary' : 'destructive'}
-                    className={brand.status === 'approved' ? 'bg-green-700/20 text-green-400 border-green-700/30' : ''}
+                   <Badge 
+                    variant={getBadgeVariant(brand.status)}
+                    className={getBadgeClassName(brand.status)}
                   >
                     {brand.status}
                   </Badge>

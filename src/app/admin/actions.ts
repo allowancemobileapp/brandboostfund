@@ -5,7 +5,12 @@ import { updateBrand } from '@/lib/data';
 import { generateBrandDescription } from '@/ai/flows/generate-brand-description';
 import type { Brand } from '@/lib/types';
 
-export async function approveBrandAction(brandId: string) {
+const ADMIN_CODE = '0000';
+
+export async function approveBrandAction(brandId: string, code: string) {
+  if (code !== ADMIN_CODE) {
+    return { success: false, message: 'Invalid admin code.' };
+  }
   try {
     await updateBrand(brandId, { 
       status: 'approved',
@@ -17,6 +22,20 @@ export async function approveBrandAction(brandId: string) {
   } catch (error) {
     console.error(error);
     return { success: false, message: 'Failed to approve brand.' };
+  }
+}
+
+export async function rejectBrandAction(brandId: string, code: string) {
+  if (code !== ADMIN_CODE) {
+    return { success: false, message: 'Invalid admin code.' };
+  }
+  try {
+    await updateBrand(brandId, { status: 'rejected' });
+    revalidatePath('/admin');
+    return { success: true, message: 'Brand rejected.' };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to reject brand.' };
   }
 }
 
