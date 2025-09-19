@@ -31,7 +31,7 @@ import { useToast } from "@/hooks/use-toast";
 const formSchema = z.object({
   name: z.string().min(2, "Your name must be at least 2 characters."),
   contact: z.string().email("Please enter a valid email address."),
-  brandName: z.string().min(2, "Brand name must be at least 2 characters."),
+  brand_name: z.string().min(2, "Brand name must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
   socials: z.string().optional(),
 });
@@ -46,7 +46,7 @@ export function BrandRegistrationForm() {
     defaultValues: {
       name: "",
       contact: "",
-      brandName: "",
+      brand_name: "",
       description: "",
       socials: "",
     },
@@ -126,7 +126,7 @@ export function BrandRegistrationForm() {
             />
              <FormField
               control={form.control}
-              name="brandName"
+              name="brand_name"
               render={({ field }) => (
                 <FormItem className="col-span-2">
                   <FormLabel>Brand Name</FormLabel>

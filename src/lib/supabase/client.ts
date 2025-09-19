@@ -9,7 +9,7 @@ export type Database = {
       brands: {
         Row: Brand;
         Insert: Omit<Brand, 'id' | 'created_at' | 'updated_at' | 'status' | 'website_url' | 'featured' | 'generated_description' | 'logo_url' | 'website_prompt'>;
-        Update: Partial<Brand>;
+        Update: Partial<Omit<Brand, 'id' | 'created_at'>>;
       };
       metrics: {
         Row: Metrics;

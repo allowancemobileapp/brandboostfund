@@ -4,7 +4,7 @@ export type Brand = {
   created_at: string;
   updated_at: string;
   name: string;
-  brandName: string;
+  brand_name: string;
   description: string;
   contact: string;
   socials?: string | null;
