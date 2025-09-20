@@ -3,19 +3,16 @@ import type { Database } from './supabase/client';
 import { supabase } from '@/lib/supabase/client';
 import type { Brand, Metrics } from '@/lib/types';
 
-// Use a server-side client for admin tasks
+// Use a server-side client for admin tasks that require elevated privileges
 const getSupabaseServerClient = () => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !serviceRoleKey) {
         console.error('Supabase server-side environment variables not set.');
-        // In a real app, handle this more gracefully.
-        // For now, returning null and letting the calling function handle it.
         return null;
     }
     
-    // Create a new client with the service role key for elevated privileges
     return createClient<Database>(
         supabaseUrl,
         serviceRoleKey
@@ -49,7 +46,7 @@ export const updateMetrics = async (newMetrics: Partial<Metrics>): Promise<Metri
     const { data, error } = await supabaseAdmin
         .from('metrics')
         .update(newMetrics)
-        .eq('id', 1) // We know there is only one row with id=1
+        .eq('id', 1)
         .select()
         .single();
 
@@ -91,8 +88,6 @@ export const addBrand = async (brandData: {
     contact: string;
     socials?: string;
 }): Promise<Brand> => {
-    // The server-side client is needed for write operations if RLS were enabled for inserts.
-    // Even without RLS, it's good practice to handle writes from a trusted server environment.
     const supabaseAdmin = getSupabaseServerClient();
     if (!supabaseAdmin) {
         throw new Error('Supabase admin client not initialized for adding brand.');
@@ -122,7 +117,6 @@ export const updateBrand = async (brandId: string, updates: Partial<Brand>): Pro
     const supabaseAdmin = getSupabaseServerClient();
     if (!supabaseAdmin) throw new Error('Supabase admin client not initialized.');
 
-    // Get the brand's current state before updating
     const currentBrand = await getBrandById(brandId);
     if (!currentBrand) {
         throw new Error('Brand not found');
@@ -140,14 +134,17 @@ export const updateBrand = async (brandId: string, updates: Partial<Brand>): Pro
         throw error;
     }
 
-    // If brand is newly approved, update the metrics
     const wasPending = currentBrand.status === 'pending';
     if (updates.status === 'approved' && wasPending) {
-        const currentMetrics = await getMetrics();
-        await updateMetrics({
-            raised: currentMetrics.raised + 10000,
-            slots: currentMetrics.slots - 1,
-        });
+        try {
+            const currentMetrics = await getMetrics();
+            await updateMetrics({
+                raised: currentMetrics.raised + 10000,
+                slots: currentMetrics.slots - 1,
+            });
+        } catch(metricError) {
+            console.error('Failed to update metrics after brand approval:', metricError);
+        }
     }
 
     return data;
