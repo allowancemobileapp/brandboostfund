@@ -97,9 +97,9 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
                       {currentBrand.generated_description || currentBrand.description}
                     </CardDescription>
                   </CardContent>
-                  <CardFooter className="pb-8">
+                  <CardFooter className="px-8 pb-8">
                     {currentBrand.website_url && (
-                      <Button asChild variant="outline" className="w-full mx-auto max-w-xs bg-background/50">
+                      <Button asChild variant="outline" className="w-full bg-background/50">
                         <Link href={currentBrand.website_url} target="_blank" rel="noopener noreferrer">
                           Visit Website <ArrowUpRight className="ml-2 h-4 w-4" />
                         </Link>
