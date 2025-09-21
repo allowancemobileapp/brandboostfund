@@ -10,7 +10,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -92,20 +91,11 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
                       <CardTitle className="font-headline text-2xl">{currentBrand.brand_name}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent className="flex-grow flex items-center justify-center">
+                  <CardContent className="flex-grow flex items-center justify-center p-6">
                     <CardDescription className="px-4 text-base">
                       {currentBrand.generated_description || currentBrand.description}
                     </CardDescription>
                   </CardContent>
-                  <CardFooter className="px-8 pb-8">
-                    {currentBrand.website_url && (
-                      <Button asChild variant="outline" className="w-full bg-background/50">
-                        <Link href={currentBrand.website_url} target="_blank" rel="noopener noreferrer">
-                          Visit Website <ArrowUpRight className="ml-2 h-4 w-4" />
-                        </Link>
-                      </Button>
-                    )}
-                  </CardFooter>
                 </Card>
               )}
             </div>
@@ -114,6 +104,19 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
           <div className="absolute -bottom-1 -right-1 text-xs font-mono text-accent/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {brands.length > 1 ? '[ CLICK TO CHANGE CHANNEL ]' : '[ OFFLINE ]'}
           </div>
+        </div>
+
+        {/* TV Control Panel */}
+        <div className="mt-4 flex items-center justify-center">
+            {currentBrand && currentBrand.website_url ? (
+              <Button asChild variant="outline" className="bg-background/50 text-sm h-9 px-4 rounded-md">
+                <Link href={currentBrand.website_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                  Visit Website <ArrowUpRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            ) : (
+              <div className="h-9" /> // Placeholder for alignment when there's no button
+            )}
         </div>
       </div>
       <div className="h-2 w-24 bg-[#1a1a1a] mx-auto rounded-b-sm border-x border-b border-white/10" />
