@@ -32,6 +32,13 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
     }
   };
 
+  useEffect(() => {
+    if (brands.length <= 1) return;
+    const interval = setInterval(handleNext, 7000); // Change channel every 7 seconds
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [brands.length]);
+
   const currentBrand = brands[currentIndex];
 
   return (
@@ -85,8 +92,10 @@ export function BrandShowcaseTV({ brands }: { brands: Brand[] }) {
                       <CardTitle className="font-headline text-2xl">{currentBrand.brand_name}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent className="flex-grow flex items-center">
-                    <CardDescription className="px-4">{currentBrand.generated_description || currentBrand.description}</CardDescription>
+                  <CardContent className="flex-grow flex items-center justify-center">
+                    <CardDescription className="px-4 text-base">
+                      {currentBrand.generated_description || currentBrand.description}
+                    </CardDescription>
                   </CardContent>
                   <CardFooter className="pb-8">
                     {currentBrand.website_url && (

@@ -1,9 +1,9 @@
 'use server';
 
 /**
- * @fileOverview An AI agent that generates a compelling brand description.
+ * @fileOverview An AI agent that generates a compelling, one-sentence brand summary.
  *
- * - generateBrandDescription - A function that generates the brand description.
+ * - generateBrandDescription - A function that generates the brand summary.
  * - GenerateBrandDescriptionInput - The input type for the generateBrandDescription function.
  * - GenerateBrandDescriptionOutput - The return type for the generateBrandDescription function.
  */
@@ -18,7 +18,7 @@ const GenerateBrandDescriptionInputSchema = z.object({
 export type GenerateBrandDescriptionInput = z.infer<typeof GenerateBrandDescriptionInputSchema>;
 
 const GenerateBrandDescriptionOutputSchema = z.object({
-  generatedDescription: z.string().describe('The AI-generated brand description.'),
+  generatedDescription: z.string().describe('The AI-generated one-sentence brand summary.'),
 });
 export type GenerateBrandDescriptionOutput = z.infer<typeof GenerateBrandDescriptionOutputSchema>;
 
@@ -30,14 +30,14 @@ const prompt = ai.definePrompt({
   name: 'generateBrandDescriptionPrompt',
   input: {schema: GenerateBrandDescriptionInputSchema},
   output: {schema: GenerateBrandDescriptionOutputSchema},
-  prompt: `You are an expert marketing copywriter.
+  prompt: `You are an expert marketing copywriter who specializes in creating concise and impactful brand statements.
 
-  You will use this information to create a compelling brand description for the brand.
+  Based on the following information, generate a single, compelling, clean, and short sentence that summarizes the brand's core mission or value proposition. This will be used in a public showcase.
 
   Brand Name: {{{brandName}}}
-  Existing Description: {{{brandDescription}}}
+  Brand's Full Description: {{{brandDescription}}}
 
-  Generated Description:`,
+  Generated one-sentence summary:`,
 });
 
 const generateBrandDescriptionFlow = ai.defineFlow(

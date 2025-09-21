@@ -2,7 +2,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { updateBrand } from '@/lib/data';
+import { getBrandById, updateBrand } from '@/lib/data';
 import { generateBrandDescription } from '@/ai/flows/generate-brand-description';
 import { generateWebsitePrompt } from '@/ai/flows/generate-website-prompt';
 import type { Brand } from '@/lib/types';
@@ -14,16 +14,32 @@ export async function approveBrandAction(brandId: string, code: string) {
     return { success: false, message: 'Invalid admin code.' };
   }
   try {
+    // First, fetch the brand to get its description
+    const brand = await getBrandById(brandId);
+    if (!brand) {
+      throw new Error('Brand not found.');
+    }
+
+    // Generate the summary description
+    const descriptionResult = await generateBrandDescription({
+      brandName: brand.brand_name,
+      brandDescription: brand.description,
+    });
+    
+    // Update the brand with approved status and the generated description
     await updateBrand(brandId, { 
       status: 'approved',
-      website_url: 'https://example.com' // Default URL, can be edited via DB access
+      website_url: 'https://example.com', // Default URL, can be edited via DB access
+      generated_description: descriptionResult.generatedDescription,
     });
+
     revalidatePath('/');
     revalidatePath('/admin');
-    return { success: true, message: 'Brand approved successfully.' };
+    return { success: true, message: 'Brand approved and summary generated.' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Failed to approve brand.' };
+    const errorMessage = error instanceof Error ? error.message : 'Failed to approve brand.';
+    return { success: false, message: errorMessage };
   }
 }
 
