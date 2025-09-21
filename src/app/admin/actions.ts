@@ -25,11 +25,13 @@ export async function approveBrandAction(brandId: string, code: string) {
       brandName: brand.brand_name,
       brandDescription: brand.description,
     });
+
+    const websiteUrl = `https://brandboostfund-showcase.vercel.app/${brand.brand_name.toLowerCase().replace(/\s+/g, '-')}`;
     
     // Update the brand with approved status and the generated description
     await updateBrand(brandId, { 
       status: 'approved',
-      website_url: 'https://example.com', // Default URL, can be edited via DB access
+      website_url: websiteUrl,
       generated_description: descriptionResult.generatedDescription,
     });
 
