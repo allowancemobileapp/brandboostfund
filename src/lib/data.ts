@@ -1,9 +1,9 @@
+
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './supabase/client';
 import { supabase } from '@/lib/supabase/client';
 import type { Brand, Metrics } from '@/lib/types';
 
-// Use a server-side client for admin tasks that require elevated privileges
 const getSupabaseServerClient = () => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -124,7 +124,7 @@ export const updateBrand = async (brandId: string, updates: Partial<Brand>): Pro
 
     const { data, error } = await supabaseAdmin
         .from('brands')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update(updates)
         .eq('id', brandId)
         .select()
         .single();
