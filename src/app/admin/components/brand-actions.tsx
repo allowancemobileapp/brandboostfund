@@ -4,7 +4,7 @@
 import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { approveBrandAction, generateWebsitePromptAction, rejectBrandAction } from '../actions';
+import { approveBrandAction, generateDescriptionAction, generateWebsitePromptAction, rejectBrandAction } from '../actions';
 import type { Brand } from '@/lib/types';
 import { Loader2, Sparkles, ShieldAlert, FileText } from 'lucide-react';
 import {
@@ -45,6 +45,17 @@ export function BrandActions({ brand }: { brand: Brand }) {
       }
       setIsDialogOpen(false);
       setCode('');
+    });
+  };
+
+  const handleGenerateDescription = () => {
+    startTransition(async () => {
+      const result = await generateDescriptionAction(brand);
+      if (result.success) {
+        toast({ title: 'Summary Generated!', description: 'The AI summary has been updated.' });
+      } else {
+        toast({ variant: 'destructive', title: 'Error', description: result.message });
+      }
     });
   };
   
@@ -120,6 +131,11 @@ export function BrandActions({ brand }: { brand: Brand }) {
       )}
       {brand.status === 'approved' && (
         <>
+          <Button variant="outline" size="sm" onClick={handleGenerateDescription} disabled={isPending}>
+            {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+            {brand.generated_description ? 'Regenerate Summary' : 'Generate Summary'}
+          </Button>
+
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline" size="sm" disabled={isPending}>

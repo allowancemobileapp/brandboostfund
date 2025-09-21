@@ -1,3 +1,4 @@
+
 import { getBrands } from '@/lib/data';
 import {
   Table,
@@ -65,6 +66,7 @@ export default async function AdminPage() {
               <TableRow>
                 <TableHead className="w-[200px]">Brand Name</TableHead>
                 <TableHead>Description</TableHead>
+                <TableHead>AI Summary</TableHead>
                 <TableHead>Registrant</TableHead>
                 <TableHead>Contact</TableHead>
                 <TableHead>Socials</TableHead>
@@ -75,7 +77,7 @@ export default async function AdminPage() {
             <TableBody>
               {brands.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
+                  <TableCell colSpan={8} className="h-24 text-center">
                     No brands registered yet.
                   </TableCell>
                 </TableRow>
@@ -84,6 +86,7 @@ export default async function AdminPage() {
                 <TableRow key={brand.id}>
                   <TableCell className="font-medium">{brand.brand_name}</TableCell>
                   <TableCell className="max-w-xs truncate">{brand.description}</TableCell>
+                  <TableCell className="max-w-xs truncate text-muted-foreground">{brand.generated_description || 'N/A'}</TableCell>
                   <TableCell>{brand.name}</TableCell>
                   <TableCell>{brand.contact}</TableCell>
                   <TableCell>{brand.socials || 'N/A'}</TableCell>
